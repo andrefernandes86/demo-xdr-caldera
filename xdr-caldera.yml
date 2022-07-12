@@ -1,0 +1,261 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: 
+  AWS CloudFormation Template - VisionOne / Caldera Demo - Only Supported if Executed on __us-west-1__ Region
+Parameters:
+  Platform:
+    Description: Please choose which EDR platform will be used. Apex One, Cloud One Workload Security, or Vision One XBC.
+    Type: 'String'
+    AllowedValues:
+    - ApexOne
+    - VisionOneEndpointSensor
+    - CloudOneWorkloadSecurity
+  PlatformURL:
+    Description: Please provide the url to download agent from platform portal. (Apex One or Vision One)
+    Type: 'String'
+  TenantID:
+    Type: 'String'
+    Description: Cloud One Workload Security Tenant ID (if using Workload Security. You can get this information using the C1WS > Deployment Scripts)
+  Token:
+    Type: 'String'
+    Description: Cloud One Workload Security Token (if using Workload Security. You can get this information using the C1WS > Deployment Scripts)
+  KeyName:
+    ConstraintDescription: Must be the name of an existing EC2 KeyPair.
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+Resources:
+  DemoVPC: 
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+  DemoSubnet:
+    Type: AWS::EC2::Subnet
+    DependsOn: DemoVPC
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.3.0/24
+  DemoNATElasticIPAddress:
+    Type: AWS::EC2::EIP
+    DependsOn: DemoVPC
+    Properties:
+      Domain: DemoVPC
+  DemoNATGateway:
+   Type: AWS::EC2::NatGateway
+   DependsOn: 
+   - DemoNATElasticIPAddress
+   - DemoSubnet
+   Properties:
+     AllocationId: !GetAtt DemoNATElasticIPAddress.AllocationId
+     SubnetId: !Ref DemoSubnet
+  DemoInternetGateway:
+    Type: AWS::EC2::InternetGateway
+  DemoRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn: DemoInternetGateway
+    Properties:
+      VpcId: !Ref DemoVPC
+  DemoAttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    DependsOn: DemoInternetGateway
+    Properties:
+      VpcId: !Ref DemoVPC
+      InternetGatewayId: !Ref DemoInternetGateway
+  DemoRoute:
+    Type: AWS::EC2::Route
+    DependsOn: DemoInternetGateway
+    Properties:
+      RouteTableId: !Ref DemoRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DemoInternetGateway
+  DemoSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DemoRouteTable
+      SubnetId: !Ref DemoSubnet
+  DemoExternalSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: DemoVPC
+    Properties:
+      GroupDescription: Caldera
+      VpcId:
+        Ref: DemoVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 8888
+        ToPort: 8888
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 7010
+        ToPort: 7012
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: udp
+        FromPort: 7010
+        ToPort: 7012
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 3389
+        ToPort: 3389
+        CidrIp: 0.0.0.0/0
+  DemoInternalSecurityGroup: 
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: DemoVPC
+    Properties:
+      GroupDescription: Allow internal traffic
+      VpcId:
+        Ref: DemoVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 8888
+        ToPort: 8888
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 7010
+        ToPort: 7012
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: udp
+        FromPort: 7010
+        ToPort: 7012
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 3389
+        ToPort: 3389
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+  WindowsClient1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.large
+      KeyName: !Ref 'KeyName'
+      NetworkInterfaces:
+      - DeviceIndex: "0"
+        AssociatePublicIpAddress: "true"
+        DeleteOnTermination: "true"
+        SubnetId: !Ref DemoSubnet
+        GroupSet:
+        - !GetAtt DemoExternalSecurityGroup.GroupId
+        - !GetAtt DemoInternalSecurityGroup.GroupId
+      ImageId: ami-0924e2d3a82e9782b
+      Tags:
+      - Key: Name
+        Value: XDR_WindowsClient1
+      UserData:
+        Fn::Base64:
+          !Sub |
+            <powershell>
+            Set-Location 'C:\Users\Public\Downloads'
+
+            # Disable Defender
+            Set-MpPreference -DisableRealtimeMonitoring $true -DisableScriptScanning $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true
+
+            # Google Chrome Installation
+            md -Path $env:temp\chromeinstall -erroraction SilentlyContinue | Out-Null
+            $Download = join-path $env:temp\chromeinstall chrome_installer.exe
+            Invoke-WebRequest 'http://dl.google.com/chrome/install/375.126/chrome_installer.exe'  -OutFile $Download
+            Invoke-Expression "$Download /silent /install"
+
+            #ApexOne Install
+            if('${Platform}' -eq 'ApexOne') {
+                $filepath = $(Join-Path $(Get-Location) "a1_install.msi")
+                $logfile = $(Join-Path $(Get-Location) "a1_install.log")
+                $MSIArguments = @(
+                    "/i"
+                    $filepath
+                    "/quiet"
+                    "/norestart"
+                    "/lv"
+                    $logfile
+                )
+
+                Invoke-WebRequest -Uri ${PlatformURL} -OutFile $filepath
+                Start-Process "msiexec.exe" -ArgumentList $MSIArguments -Wait -NoNewWindow
+
+            #Vision One Endpoint Sensor install
+            } elseif ('${Platform}' -eq 'VisionOneEndpointSensor') {
+                $filepath = "v1_endpoint_sensor.exe"
+                Invoke-WebRequest -Uri ${PlatformURL} -OutFile $filepath
+                Start-Process $(Join-Path $(Get-Location) $filepath) -Wait -NoNewWindow
+            }
+
+            #Workload Security Install
+            elseif('${Platform}' -eq 'CloudOneWorkloadSecurity'){
+                $filepath = $(Join-Path $(Get-Location) "ws_install.msi")
+                $transcript_path = $(Join-Path $(Get-Location) "ws_install.log")
+                $env:LogPath = "$env:appdata\Trend Micro\Deep Security Agent\Installer Logs"
+                $download_url = "https://app.deepsecurity.trendmicro.com:443/software/agent/Windows/x86_64/agent.msi"
+                
+                #Make sure the ActivationURL parameter is correct (Trend Micro SEs must keep the trend-us-1 region enabled)
+                #$ACTIVATIONURL="dsm://agents.deepsecurity.trendmicro.com:443/"
+                $ACTIVATIONURL="dsm://agents.workload.trend-us-1.cloudone.trendmicro.com:443/"
+                
+                
+                $TENANTID="tenantID:${TenantID}"
+                $TOKEN="token:${Token}"
+
+                New-Item -path $env:LogPath -type directory
+                Start-Transcript -path $transcript_path -append
+
+                write-host "Downloading agent from $download_url"
+                Invoke-WebRequest -Uri $download_url -OutFile $filepath
+
+                Write-Host 'Installing agent MSI'
+                Start-Process "msiexec.exe" -ArgumentList "/i $filepath /qn ADDLOCAL=ALL /l*v `"$env:LogPath\dsa_install.log`"" -Wait -NoNewWindow
+
+                #wait before running activation
+                Start-Sleep -Seconds 60
+
+                Write-Host "Activating agent to Tenant: $TENANTID"
+
+                & $Env:ProgramFiles"\Trend Micro\Deep Security Agent\dsa_control" -r
+                & $Env:ProgramFiles"\Trend Micro\Deep Security Agent\dsa_control" -a $ACTIVATIONURL $TENANTID $TOKEN | Write-Output $env:LogPath + '\activationlog.log'
+                Stop-Transcript
+            }
+            </powershell>
+
+  LinuxServer:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.medium
+      KeyName: !Ref 'KeyName'
+      NetworkInterfaces:
+      - DeviceIndex: "0"
+        AssociatePublicIpAddress: "true"
+        DeleteOnTermination: "true"
+        SubnetId: !Ref DemoSubnet
+        GroupSet:
+        - !GetAtt DemoExternalSecurityGroup.GroupId
+        - !GetAtt DemoInternalSecurityGroup.GroupId
+      ImageId: ami-085284d24fe829cd0
+      Tags:
+      - Key: Name
+        Value: XDR_LinuxServer
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            apt-get update -y
+            apt-get install docker.io -y
+            apt-get install git -y
+            apt-get install docker-compose -y
+            git clone https://github.com/mitre/caldera.git --recursive
+            cd caldera
+            docker-compose build
+            docker run -d --name caldera -p 80:8888 -p 8888:8888 -p 7010:7010 -p 7011:7011 -p 7012:7012 caldera
+Outputs:
+  WindowClient1PublicIP:
+    Description: Use this IP address to access the Windows Client.
+    Value: !GetAtt WindowsClient1.PublicIp
+  LinuxServerPublicIP:
+    Description: Use this IP address to access the Linux Client (http://LinuxServer.PublicIp). The username/password is admin/admin.
+    Value: !GetAtt LinuxServer.PublicIp
