@@ -74,11 +74,12 @@ __How to demo:
 4- Execute the powershell script on the Windows Instance
 
 
------
+__
 Optional (in case you want to demonstrate it in conjunction with CAS)
 4- Access the following website https://ps2exe.azurewebsites.net/ and generate an executable file using the powershell script you've copied in the previous step
 4.1- Send an email with the malicious attachment to the target user
------
+__
+
 
 5- After you execute the PS script on the Windows Instance, you will find a new Client connected to the Mitre Caldera Portal (You can find it on Navigate > Agents menu)
 
