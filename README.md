@@ -45,15 +45,15 @@ This demo script was created to demonstrate the following use case:
 
 + Attacker is using Mitre Caldera as C&C Server
 
-++ Using Mitre Caldera, the Attacker will generate one malicious payload (powershell). This malicious payload will generate a reverse connection between the Windows Instance and the C&C Server.
++ Using Mitre Caldera, the Attacker will generate one malicious payload (powershell). This malicious payload will generate a reverse connection between the Windows Instance and the C&C Server.
 
-++ The Attacker, using the Mitre Caldera, will use the tools available on Mitre Caldera to start checking some conditions and extracting sensitive data from the Windows Computer
++ The Attacker, using the Mitre Caldera, will use the tools available on Mitre Caldera to start checking some conditions and extracting sensitive data from the Windows Computer
 
-++ The Trend Micro XDR agent is monitoring all the actions happening to the Windows Computer. The Risk Level of this device is increasing and it is becoming of of the riskiest devices of this demo environment.
++ The Trend Micro XDR agent is monitoring all the actions happening to the Windows Computer. The Risk Level of this device is increasing and it is becoming of of the riskiest devices of this demo environment.
 
-++ The attacker will finish the attack encrypting the Windows Device, to make the impact of this attack even bigger.
++ The attacker will finish the attack encrypting the Windows Device, to make the impact of this attack even bigger.
 
-++ Because of the policies in place, once the device' risk level reaches 60, the Windows Device will be automatically isolated.
++ Because of the policies in place, once the device' risk level reaches 60, the Windows Device will be automatically isolated.
 
 
 --------------
