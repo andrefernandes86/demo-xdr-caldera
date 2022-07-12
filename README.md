@@ -66,7 +66,9 @@ __How to demo:
 3- Open the Mitre Caldera Management Console, and create a new malicious payload
 
 --Navigate > Agents > Click Here to Deploy an Agent > Select the "54ndc47" agent and Select the Windows Platform
+
 --Replace the "app.contact.http" information with the Linux IP Address (example http://linux-ip)
+
 --Copy the Powershell script created for this agent
 
 4- Execute the powershell script on the Windows Instance
