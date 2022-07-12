@@ -9,12 +9,16 @@ Windows/Mac/Linux OS
 
 __Prepaing the Demo Environment:
 
-- Deploy the Cloud Formation Template (Make sure you are using the us-west-1 region)
-The following information has to be provided:
+- Deploy the Cloud Formation Template (Make sure you are using the us-west-1 region). The following information has to be provided:
+
 -Stack name - Name of the stack you are creating (example XDR-Demo)
+
 -KeyName - KeyPar to be used when creating the EC2 Instances
+
 -Platform - Select the appropriate platform (VisionOne, C1WS or ApexOne). Based on your selection, the following information has be provided
+
 --PlatformURL - If you selected ApexOne or VisionOne, add the AgentInstallationURL (ApexOne Agent Installer or VisionOne Basecamp)
+
 --TenantID and Token - If you selected C1WS, you have to get the TennantID and Token to be used installing and activating the agent. You can get this information using the C1WS > Deployment Scripts
 
 __Testing the demo environment
