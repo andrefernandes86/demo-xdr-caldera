@@ -1,5 +1,5 @@
 # Trend Micro Vision One Demo
-
+---------------
 __Requirements:
 
 Windows/Mac/Linux OS
@@ -7,6 +7,8 @@ Windows/Mac/Linux OS
 - RDP/SSH Client
 - Google Chrome or Mozilla Firefox
 
+
+--------------------------------
 __Prepaing the Demo Environment:
 
 - Deploy the Cloud Formation Template (Make sure you are using the us-west-1 region). The following information has to be provided:
@@ -21,7 +23,9 @@ __Prepaing the Demo Environment:
 
 --TenantID and Token - If you selected C1WS, you have to get the TennantID and Token to be used installing and activating the agent. You can get this information using the C1WS > Deployment Scripts
 
-__Testing the demo environment
+
+-------------------------------
+__Testing the demo environment:
 
 After the CFT deployment is finished, you need to access the Windows Instance using RDP. You can get the credentials following the procedure described here https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/connecting_to_windows_instance.html
 
@@ -31,18 +35,29 @@ Also, you must make sure the Windows Instance is registered in your VisionOne/Ap
 
 Using the VisionOne Portal, you must make sure that you have created a Secure Access Rule to automatically isolate devices with a (persistent) Risk Level of 60 or Higher (once matched).
 
-__What to expect from this demo!
+
+--------------------------------
+__What to expect from this demo:
 
 This demo script was created to demonstrate the following use case:
+
 + Attacker trying to get the control of an Windows Instance
+
 + Attacker is using Mitre Caldera as C&C Server
+
 ++ Using Mitre Caldera, the Attacker will generate one malicious payload (powershell). This malicious payload will generate a reverse connection between the Windows Instance and the C&C Server.
+
 ++ The Attacker, using the Mitre Caldera, will use the tools available on Mitre Caldera to start checking some conditions and extracting sensitive data from the Windows Computer
+
 ++ The Trend Micro XDR agent is monitoring all the actions happening to the Windows Computer. The Risk Level of this device is increasing and it is becoming of of the riskiest devices of this demo environment.
+
 ++ The attacker will finish the attack encrypting the Windows Device, to make the impact of this attack even bigger.
+
 ++ Because of the policies in place, once the device' risk level reaches 60, the Windows Device will be automatically isolated.
 
-__How to demo
+
+--------------
+__How to demo:
 
 1- Open the RDP Session and show the basecamp components running on background;
 
@@ -51,19 +66,17 @@ __How to demo
 3- Open the Mitre Caldera Management Console, and create a new malicious payload
 
 --Navigate > Agents > Click Here to Deploy an Agent > Select the "54ndc47" agent and Select the Windows Platform
-
 --Replace the "app.contact.http" information with the Linux IP Address (example http://linux-ip)
-
 --Copy the Powershell script created for this agent
-
 
 4- Execute the powershell script on the Windows Instance
 
+
+-----
 Optional (in case you want to demonstrate it in conjunction with CAS)
-
 4- Access the following website https://ps2exe.azurewebsites.net/ and generate an executable file using the powershell script you've copied in the previous step
-
 4.1- Send an email with the malicious attachment to the target user
+-----
 
 5- After you execute the PS script on the Windows Instance, you will find a new Client connected to the Mitre Caldera Portal (You can find it on Navigate > Agents menu)
 
