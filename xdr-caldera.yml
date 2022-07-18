@@ -310,8 +310,8 @@ Resources:
 
 Outputs:
   WindowClient1PublicIP:
-    Description: Use this IP address to access the Windows Client.
+    Description: AF_ Use this IP address to access the Windows Client.
     Value: !GetAtt WindowsClient1.PublicIp
   LinuxServerPublicIP:
-    Description: Use this IP address to access the Linux Client (http://LinuxServer.PublicIp). The username/password is admin/admin.
+    Description: AF_ Use this IP address to access the Linux Client (http://LinuxServer.PublicIp). The username/password is admin/admin.
     Value: !GetAtt LinuxServer.PublicIp
