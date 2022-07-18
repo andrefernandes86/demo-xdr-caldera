@@ -12,7 +12,7 @@ Wait for the result and check if the hostname matches with the Windows Instance
 Select the "Potential Link" Option
 Select the Powershell interpreter
 Search and Execute the Tatic T1113 (Screen Capture).
-After 5 minutes, VisionOne should show this event as a Workbench
+After 5 minutes, VisionOne should show this event as a Workbench/Observed Attack Techniques
 
 Now its time to configure Zero Trust Secure Access rules
 Make sure you have a new policy to isolate the any endpoint which reaches or exceed the Risk Index -60-
