@@ -3,7 +3,7 @@ Make sure the XDR/EDR Agent is Enabled;
 Deploy the Caldera Agents;
 
 Create a new Operation;
-Select the Operation "You Shall (Not) Pass";
+Select the Operation "No Operation";
 
 Select the "Manual Command" Option
 Select the CMD interpreter, type "hostname" and click on Add Command
