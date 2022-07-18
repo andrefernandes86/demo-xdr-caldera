@@ -23,6 +23,8 @@ __Prepaing the Demo Environment:
 
 --TenantID and Token - If you selected C1WS, you have to get the TennantID and Token to be used installing and activating the agent. You can get this information using the C1WS > Deployment Scripts
 
+--YourName - Just add your name. It will help to differentiate the components used in your demo, from the other users components.
+
 
 -------------------------------
 __Testing the demo environment:
@@ -63,15 +65,9 @@ __How to demo:
 
 2- Open the VisionOne Dashboard, and show the Actual Risk Level of this Windows Computer;
 
-3- Open the Mitre Caldera Management Console, and create a new malicious payload
+3- Update the Caldera.ps1 file that you can find on the Windows Instance. You just need to replace the CHANGE-ME string with the Linux IP Address
 
---Navigate > Agents > Click Here to Deploy an Agent > Select the "54ndc47" agent and Select the Windows Platform
-
---Replace the "app.contact.http" information with the Linux IP Address (example http://linux-ip)
-
---Copy the Powershell script created for this agent
-
-4- Execute the powershell script on the Windows Instance
+4- Execute the Caldera.ps1 script on the Windows Instance
 
 5- After you execute the PS script on the Windows Instance, you will find a new Client connected to the Mitre Caldera Portal (You can find it on Navigate > Agents menu)
 
@@ -85,7 +81,7 @@ __How to demo:
 
 10- The following Mitre Techniques can help you to increase the risk level of the Windows Machine quickly, so if you want, this could be the best path to follow and have the Automated Response actions triggered.
 
-10.1- T1059.001, T1059.001, T1113, T1115, T1105, T1105, T1003.001, T1055.002, T1003.001, T1059.001, T1059.001, T1548.002, T1496, T1491
+10.1- T1113 (Screen Capture) (You can add other techniques / demonstrating different use cases)
 
 11- Check the VisionOne Portal, wait for the new logs (+-5 minutes) and look to the Risk Level of the Windows Instance. The number is increasing, right?
 
