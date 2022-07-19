@@ -4,7 +4,7 @@ __Requirements:
 
 Windows/Mac/Linux OS
 - AWS Account
-  - KeyPay
+  - KeyPar
 - RDP/SSH Client
 - Google Chrome or Mozilla Firefox
 
